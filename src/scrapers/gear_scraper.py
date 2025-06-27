@@ -5,6 +5,10 @@ import re
 
 from playwright.sync_api import Playwright, expect
 
+from ..constants.locators import (PRODUCT_CELL, PRODUCT_GRID, PRODUCT_PRICE,
+                                  PRODUCT_TITLE)
+from ..constants.pages import GEAR_URL, PAGE_TITLE, SHOP_URL
+
 
 def get_latest_gear(playwright: Playwright):
     """Get latest items and price from shop url"""

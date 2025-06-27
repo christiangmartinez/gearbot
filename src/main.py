@@ -5,7 +5,7 @@ import sys
 
 from playwright.sync_api import sync_playwright
 
-from scrapers.gear_scraper import get_latest_gear
+from .scrapers.gear_scraper import get_latest_gear
 
 
 def main():
