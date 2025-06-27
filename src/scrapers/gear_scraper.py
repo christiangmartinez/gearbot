@@ -1,16 +1,13 @@
-"""
-web scraping functions
-"""
 import re
 
-from playwright.sync_api import Playwright, expect
+from playwright.sync_api import Playwright, expect, sync_playwright
 
 from ..constants.locators import (PRODUCT_CELL, PRODUCT_GRID, PRODUCT_PRICE,
                                   PRODUCT_TITLE)
 from ..constants.pages import GEAR_URL, PAGE_TITLE, SHOP_URL
 
 
-def get_latest_gear(playwright: Playwright):
+def scrape_latest_gear(playwright: Playwright):
     """Get latest items and price from shop url"""
     chromium = playwright.chromium
     browser = chromium.launch()
@@ -32,3 +29,7 @@ def get_latest_gear(playwright: Playwright):
 
     browser.close()
     return gear
+
+def get_latest_gear():
+    with sync_playwright() as playwright:
+        return scrape_latest_gear(playwright)
