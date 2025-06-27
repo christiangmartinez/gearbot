@@ -3,10 +3,12 @@ from .scrapers.gear_scraper import get_latest_gear
 
 def search_gear(search_term):
     gear = get_latest_gear()
+    search_set = make_set(search_term)
 
     matches = []
     for item in gear:
-        if search_term.lower() in item["name"].lower():
+        item_set = make_set(item["name"])
+        if search_set.issubset(item_set):
             matches.append(f'{item["name"]}: {item["price"]}\n{item["link"]}')
 
     if not matches:
@@ -20,3 +22,6 @@ def search_gear(search_term):
 
     for match in matches:
         print(match)
+
+def make_set(string):
+    return set(string.lower().split())
