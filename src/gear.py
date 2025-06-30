@@ -1,7 +1,7 @@
 from .scrapers.gear_scraper import get_latest_gear
 
 
-def search_gear(search_term):
+def search_gear(search_term: str):
     gear_list = get_latest_gear()
     search_set = make_set(search_term)
 
@@ -23,5 +23,5 @@ def search_gear(search_term):
     for gear_match in gear_match_list:
         print(gear_match)
 
-def make_set(input_string):
+def make_set(input_string: str):
     return set(input_string.lower().split())
