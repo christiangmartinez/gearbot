@@ -1,14 +1,16 @@
-from .scrapers.gear_scraper import get_latest_gear
+class GearQuery:
+    def __init__(self, search_term, query_date, gear_list):
+        self.search_term = search_term
+        self.query_date = query_date
+        self.gear_list = gear_list
 
-
-def search_gear(search_term: str):
-    gear_list = get_latest_gear()
-    search_set = make_set(search_term)
+def find_gear_match(search_term: str, gear_list: list):
+    search_term_set = set(search_term.lower().split())
 
     gear_match_list = []
     for item in gear_list:
-        item_set = make_set(item["name"])
-        if search_set.issubset(item_set):
+        item_set = set(item["name"].lower().split())
+        if search_term_set.issubset(item_set):
             gear_match_list.append(f'{item["name"]}: {item["price"]}\n{item["link"]}')
 
     if not gear_match_list:
@@ -22,6 +24,3 @@ def search_gear(search_term: str):
 
     for gear_match in gear_match_list:
         print(gear_match)
-
-def make_set(input_string: str):
-    return set(input_string.lower().split())
