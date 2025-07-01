@@ -9,3 +9,6 @@ requires-python = ">=3.13"
 authors = [{name = "Christian Martinez"}]
 description = "Automated search for music gear"
 readme = "README.md"
+
+[project.scripts]
+gearbot = "app.cli:app"
