@@ -7,7 +7,7 @@ def post_gear_list(gear_list: list):
         connection = sqlite3.connect("gear_list.db")
         cursor = connection.cursor()
 
-        cursor.execute("""CREATE TABLE gear_list(
+        cursor.execute("""CREATE TABLE IF NOT EXISTS gear_list(
             name TEXT NOT NULL,
             price REAL NOT NULL, 
             link TEXT
