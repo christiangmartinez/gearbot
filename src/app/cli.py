@@ -1,3 +1,7 @@
+"""
+CLI app
+"""
+
 import typer
 
 from .app import add_gear_query
