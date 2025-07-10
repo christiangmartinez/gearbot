@@ -25,6 +25,7 @@ def post_gear_list(gear_list: list):
             print("No valid data exists...")
 
         cursor.executemany("INSERT INTO gear_list (name, price, link) VALUES (?, ?, ?)", gear_tuples)
+        connection.commit()
 
     except sqlite3.Error as e:
         print(f'Database error: {e}')
@@ -41,6 +42,7 @@ def post_gear_query(search_term: str, query_date: str):
         connection = sqlite3.connect("gear_data.db")
         cursor = connection.cursor()
         cursor.execute("INSERT INTO gear_query (search_term, query_date) VALUES (?, ?)", (search_term, query_date))
+        connection.commit()
 
     except sqlite3.Error as e:
         print(f'Database error: {e}')
@@ -57,6 +59,7 @@ def post_gear_match(name: str, price: str, link: str, query_id: int):
         connection = sqlite3.connect("gear_data.db")
         cursor = connection.cursor()
         cursor.execute("INSERT INTO gear_matches (name, price, link, queryid) VALUES (?, ?, ?, ?)", (name, price, link, query_id))
+        connection.commit()
 
     except sqlite3.Error as e:
         print(f'Database error: {e}')
