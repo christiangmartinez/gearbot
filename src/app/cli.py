@@ -5,7 +5,7 @@ CLI app
 import typer
 
 from .app import add_gear_query
-from .data.create_db import init_db
+from .data.data import init_db
 
 app = typer.Typer()
 app.command()(add_gear_query)

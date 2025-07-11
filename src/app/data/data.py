@@ -16,13 +16,13 @@ def init_db():
             CREATE TABLE IF NOT EXISTS gear_list (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
-                price REAl,
+                price REAL,
                 link TEXT
             );
         """)
 
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS gear_query (
+            CREATE TABLE IF NOT EXISTS gear_queries (
                 query_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 search_term TEXT,
                 query_date TEXT

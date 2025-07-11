@@ -1,5 +1,5 @@
 class GearQuery:
-    def __init__(self, search_term: str, query_date: object):
+    def __init__(self, search_term: str, query_date: str):
         self.search_term = search_term
         self.query_date = query_date
         self.matches = []
@@ -24,3 +24,4 @@ class GearQuery:
 
         for match in self.matches:
             print(f'{match["name"]}: {match["price"]} \n {match["link"]}')
+

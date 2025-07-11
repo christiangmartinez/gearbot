@@ -2,29 +2,26 @@
 Insert data to tables
 """
 
-import os
 import sqlite3
 
 
 def post_gear_list(gear_list: list):
     """"Post gear list to database"""
-    check_db()
     connection = None
     try:
         connection = sqlite3.connect("gear_data.db")
         cursor = connection.cursor()
 
         gear_tuples = []
-        for item in gear_list:
-            name = item["name"]
-            price = item["price"]
-            link = item["link"]
-            gear_tuples.append((name, price, link))
+        _convert_to_tuples(gear_list, gear_tuples)
 
         if not gear_tuples:
             print("No valid data exists...")
 
-        cursor.executemany("INSERT INTO gear_list (name, price, link) VALUES (?, ?, ?)", gear_tuples)
+        cursor.executemany(
+            """INSERT INTO gear_list
+            (name, price, link) VALUES (?, ?, ?)""",
+            gear_tuples)
         connection.commit()
 
     except sqlite3.Error as e:
@@ -36,12 +33,14 @@ def post_gear_list(gear_list: list):
 
 def post_gear_query(search_term: str, query_date: str):
     """Post gear query to database"""
-    check_db()
     connection = None
     try:
         connection = sqlite3.connect("gear_data.db")
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO gear_query (search_term, query_date) VALUES (?, ?)", (search_term, query_date))
+        cursor.execute(
+            """INSERT INTO gear_queries 
+            (search_term, query_date) VALUES (?, ?)""",
+            (search_term, query_date))
         connection.commit()
 
     except sqlite3.Error as e:
@@ -51,14 +50,22 @@ def post_gear_query(search_term: str, query_date: str):
         if connection:
             connection.close()
 
-def post_gear_match(name: str, price: str, link: str, query_id: int):
+def post_gear_matches(gear_matches: list):
     """Post gear matches to database"""
-    check_db()
     connection = None
     try:
         connection = sqlite3.connect("gear_data.db")
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO gear_matches (name, price, link, queryid) VALUES (?, ?, ?, ?)", (name, price, link, query_id))
+        match_tuples = []
+        _convert_to_tuples(gear_matches, match_tuples)
+
+        if not match_tuples:
+            print("No valid data exists...")
+
+        cursor.executemany(
+            """INSERT INTO gear_matches 
+            (name, price, link, queryid) VALUES (?, ?, ?, ?)""",
+            gear_matches)
         connection.commit()
 
     except sqlite3.Error as e:
@@ -68,8 +75,9 @@ def post_gear_match(name: str, price: str, link: str, query_id: int):
         if connection:
             connection.close()
 
-def check_db():
-    """Check if database exists"""
-    if not os.path.isfile("gear_list.db"):
-        print("Error: gear list database not found. Please run 'gearbot setup'")
-
+def _convert_to_tuples(input_list: list, output_list: list):
+    for item in input_list:
+        name = item["name"]
+        price = item["price"]
+        link = item["link"]
+        output_list.append((name, price, link))
