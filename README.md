@@ -35,3 +35,6 @@ pipx install .
 - Create web scraper for Sweetwater.com to show cost of similar item new
 - Add search functionality for just Reverb (probably more useful to most people)
 - Keep track of multiple gear queries at once
+
+## Let gearbot take you to gear heaven!
+![gear heaven gif](gear_heaven.gif)
