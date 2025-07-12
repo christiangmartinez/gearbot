@@ -2,15 +2,13 @@
 Fetch data from tables
 """
 
-import sqlite3
-
 from .data import execute_sql_query
 
 
 def fetch_gear_queries():
     """Fetch all gear queries"""
-    execute_sql_query("SELECT * FROM gear_queries")
+    return execute_sql_query("SELECT * FROM gear_queries", is_select=True)
 
 def fetch_gear_list():
     """Fetch all items in gear list table"""
-    execute_sql_query("SELECT * FROM gear_list")
+    return execute_sql_query("SELECT * FROM gear_list", is_select=True)

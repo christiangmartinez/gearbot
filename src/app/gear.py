@@ -24,4 +24,3 @@ class GearQuery:
 
         for match in self.matches:
             print(f'{match["name"]}: {match["price"]} \n {match["link"]}')
-
