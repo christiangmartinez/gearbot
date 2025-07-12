@@ -1,27 +1,26 @@
-from .scrapers.gear_scraper import get_latest_gear
+class GearQuery:
+    def __init__(self, search_term: str, query_date: str):
+        self.search_term = search_term
+        self.query_date = query_date
+        self.matches = []
 
 
-def search_gear(search_term: str):
-    gear_list = get_latest_gear()
-    search_set = make_set(search_term)
+    def find_gear_match(self, search_term: str, gear_list: list):
+        search_term_set = set(search_term.lower().split())
 
-    gear_match_list = []
-    for item in gear_list:
-        item_set = make_set(item["name"])
-        if search_set.issubset(item_set):
-            gear_match_list.append(f'{item["name"]}: {item["price"]}\n{item["link"]}')
+        for item in gear_list:
+            item_set = set(item["name"].lower().split())
+            if search_term_set.issubset(item_set):
+                self.matches.append(item)
 
-    if not gear_match_list:
-        print(f'No gear_match_list for {search_term}')
-        return
+        if not self.matches:
+            print(f'No matches for {search_term}')
+            return
 
-    print(
-        f"{len(gear_match_list) if len(gear_match_list) > 1 else ''}"
-        f"{' Matches' if len(gear_match_list) > 1 else 'Match'} found for {search_term}!"
-    )
+        print(
+            f"{len(self.matches) if len(self.matches) > 1 else ''}"
+            f"{' Matches' if len(self.matches) > 1 else 'Match'} found for {search_term}!"
+        )
 
-    for gear_match in gear_match_list:
-        print(gear_match)
-
-def make_set(input_string: str):
-    return set(input_string.lower().split())
+        for match in self.matches:
+            print(f'{match["name"]}: {match["price"]} \n {match["link"]}')

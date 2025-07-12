@@ -1,0 +1,31 @@
+"""
+Insert data to tables
+"""
+
+from .data import execute_sql_query
+
+
+def post_gear_query(search_term: str, query_date: str):
+    """Post gear query to gear_queries table"""
+    query_values = (search_term, query_date)
+    sql_query = "INSERT INTO gear_queries (search_term, query_date) VALUES (?, ?)"
+    execute_sql_query(sql_query, query_values)
+
+def post_gear_list(gear_list: list):
+    """"Post all items in gear_list to gear_list table"""
+    gear_tuples = [
+        (gear["name"], gear["price"], gear["link"])
+        for gear in gear_list
+    ]
+    sql_query = "INSERT INTO gear_list(name, price, link) VALUES (?, ?, ?)"
+    execute_sql_query(sql_query, gear_tuples, execute_many=True)
+
+
+def post_gear_matches(gear_matches: list):
+    """Post gear matches to database"""
+    match_tuples = [
+        (match["query_id"], match["name"], match["price"], match["link"])
+        for match in gear_matches
+    ]
+    sql_query = "INSERT INTO gear_matches (name, price, link, queryid) VALUES (?, ?, ?, ?)"
+    execute_sql_query(sql_query, match_tuples, execute_many=True)

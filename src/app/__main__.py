@@ -1,3 +1,7 @@
+"""
+Run CLI app
+"""
+
 import os
 import sys
 

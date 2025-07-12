@@ -1,3 +1,6 @@
+"""
+Scraper for Hank's Music Exchange
+"""
 import re
 
 from playwright.sync_api import Playwright, expect, sync_playwright
@@ -8,6 +11,7 @@ from ..constants.pages import GEAR_URL, PAGE_TITLE, SHOP_URL
 
 
 def scrape_latest_gear(playwright: Playwright):
+    """Get posts on lates gear page"""
     chromium = playwright.chromium
     browser = chromium.launch()
     page = browser.new_page()
@@ -26,5 +30,6 @@ def scrape_latest_gear(playwright: Playwright):
     return gear_list
 
 def get_latest_gear():
+    """Get gear without importing playwright into other modules"""
     with sync_playwright() as playwright:
         return scrape_latest_gear(playwright)
