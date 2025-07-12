@@ -4,19 +4,13 @@ Fetch data from tables
 
 import sqlite3
 
+from .data import execute_sql_query
+
 
 def fetch_gear_queries():
     """Fetch all gear queries"""
-    connection = None
-    try:
-        connection = sqlite3.connect("gear_data.db")
-        cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM gear_queries""")
-        response = cursor.fetchall()
-        return response
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return []
-    finally:
-        if connection:
-            connection.close()
+    execute_sql_query("SELECT * FROM gear_queries")
+
+def fetch_gear_list():
+    """Fetch all items in gear list table"""
+    execute_sql_query("SELECT * FROM gear_list")
