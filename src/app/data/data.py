@@ -25,7 +25,7 @@ def init_db():
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_queries (
-                query_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 search_term TEXT,
                 query_date TEXT
             )
@@ -33,12 +33,12 @@ def init_db():
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_matches (
-                gear_match_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 price REAL,
                 link TEXT,
-                query_id INT,
-                FOREIGN KEY(query_id) REFERENCES gear_query(query_id)
+                query_id INTEGER,
+                FOREIGN KEY(query_id) REFERENCES gear_queries(id)
             )
         """)
 
@@ -57,7 +57,7 @@ def execute_sql_query(
     params: Union[Tuple[Any, ...], List[Tuple[Any, ...]]] = (),
     execute_many: bool = False,
     is_select: bool = False,
-) -> Optional[List[Tuple[Any,...]]]:
+) -> Optional[List[sqlite3.Row]]:
     """
     Executes a SQL query and returns optional results
     params: values to be inserted into tables - single tuple or list of tuples.
@@ -70,6 +70,7 @@ def execute_sql_query(
     """
     try:
         with sqlite3.connect(GEAR_DB) as connection:
+            connection.row_factory = sqlite3.Row
             cursor = connection.cursor()
             if execute_many:
                 cursor.executemany(sql_query, params)
