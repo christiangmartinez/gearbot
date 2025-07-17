@@ -1,6 +1,6 @@
 [project]
 name = "gearbotCLI"
-version = "1.0.0"
+version = "0.0"
 dependencies = [
     "playwright",
     "typer",
