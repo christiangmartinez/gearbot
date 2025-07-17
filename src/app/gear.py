@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from .data.fetch import fetch_gear_queries
 
@@ -11,7 +11,7 @@ class GearQuery:
         self.matches = []
 
 
-    def find_match(self, search_term: str, gear_list: list) -> Optional[List[Dict]]:
+    def find_match(self, search_term: str, gear_list: list) -> List[Dict]:
         """Searches for a match for a query's search term, returns a list of matches"""
         search_term_set = set(search_term.lower().split())
 
@@ -28,7 +28,7 @@ class GearQuery:
 
         if not self.matches:
             print(f"No matches for {search_term}")
-            return None
+            return self.matches
         print(f"{len(self.matches)} match(es) for {search_term}")
         return self.matches
 
@@ -43,4 +43,4 @@ def get_active_queries():
             active_queries.append(query)
         return active_queries
     print("No active queries found")
-    return None
+    return active_queries

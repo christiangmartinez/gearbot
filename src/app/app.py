@@ -24,12 +24,10 @@ def update_gear_matches():
     """Checks current gear list for matches for any active queries"""
     gear_list = fetch_gear_list()
     active_queries = get_active_queries()
-    if active_queries:
-        for query in active_queries:
-            print(query.search_term)
-            matches = query.find_match(query.search_term, gear_list)
-            if matches:
-                post_gear_matches(matches)
+    for query in active_queries:
+        print(query.search_term)
+        matches = query.find_match(query.search_term, gear_list)
+        post_gear_matches(matches)
 
 def update_gear_list():
     """Scrapes latest gear at Hank's and updates DB"""
