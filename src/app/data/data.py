@@ -27,7 +27,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS gear_queries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 search_term TEXT,
-                query_date TEXT
+                timestamp TEXT
             )
         """)
 
