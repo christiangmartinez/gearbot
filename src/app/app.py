@@ -4,9 +4,6 @@ Add gear query logic
 
 from datetime import datetime
 
-import typer
-from typing_extensions import Annotated
-
 from app.data.fetch import fetch_gear_list
 
 from .data.post import post_gear_list, post_gear_matches, post_gear_query
@@ -14,7 +11,7 @@ from .gear import GearQuery, get_active_queries
 from .scrapers.gear_scraper import get_latest_gear
 
 
-def add_gear_query(search_term: Annotated[str, typer.Argument()]):
+def add_gear_query(search_term: str):
     """Create a new gear query"""
     timestamp = datetime.now().strftime("%Y-%m-%d")
     new_gear_query = GearQuery(search_term, timestamp)
