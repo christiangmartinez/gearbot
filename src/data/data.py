@@ -9,6 +9,7 @@ GEAR_DB = "gear_data.db"
 
 def init_db():
     """Initialize database and create tables"""
+    print("yo yo, this is from the data.py function!!!")
     connection = None
     try:
         connection = sqlite3.connect(GEAR_DB)

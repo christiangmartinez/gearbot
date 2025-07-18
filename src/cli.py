@@ -16,6 +16,7 @@ def main(search_term: Annotated[str, typer.Argument()]):
 
 @app.command()
 def setup():
+    print("calling init db from cli")
     init_db()
 app.command()(update_gear_matches)
 app.command()(update_gear_list)
