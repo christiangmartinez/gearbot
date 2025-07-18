@@ -6,8 +6,7 @@ import typer
 from typing_extensions import Annotated
 
 from app.app import add_gear_query, update_gear_list, update_gear_matches
-
-from .data.data import init_db
+from data.data import init_db
 
 app = typer.Typer()
 

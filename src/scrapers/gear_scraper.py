@@ -5,9 +5,9 @@ import re
 
 from playwright.sync_api import Playwright, expect, sync_playwright
 
-from ..constants.locators import (PRODUCT_CELL, PRODUCT_GRID, PRODUCT_PRICE,
-                                  PRODUCT_TITLE)
-from ..constants.pages import GEAR_URL, PAGE_TITLE, SHOP_URL
+from constants.locators import (PRODUCT_CELL, PRODUCT_GRID, PRODUCT_PRICE,
+                                PRODUCT_TITLE)
+from constants.pages import GEAR_URL, PAGE_TITLE, SHOP_URL
 
 
 def scrape_latest_gear(playwright: Playwright):

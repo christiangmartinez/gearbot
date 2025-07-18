@@ -4,11 +4,11 @@ Add gear query logic
 
 from datetime import datetime
 
-from app.data.fetch import fetch_gear_list
+from data.fetch import fetch_gear_list
+from data.post import post_gear_list, post_gear_matches, post_gear_query
+from scrapers.gear_scraper import get_latest_gear
 
-from .data.post import post_gear_list, post_gear_matches, post_gear_query
 from .gear import GearQuery, get_active_queries
-from .scrapers.gear_scraper import get_latest_gear
 
 
 def add_gear_query(search_term: str):
