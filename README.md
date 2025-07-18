@@ -27,14 +27,13 @@ pipx install .
 ```
 
 ## Usage
-`gearbot <gear-you-want>`
+`gearbot search <gear-you-want>`
 
 ## TODO
 - Add SMS notifications for gear matches
 - Create web crawler for Reverb.com to show similar items to any matches + their average price
 - Create web scraper for Sweetwater.com to show cost of similar item new
 - Add search functionality for just Reverb (probably more useful to most people)
-- Keep track of multiple gear queries at once
 
 ## Let gearbot take you to gear heaven!
-![gear heaven gif](gear_heaven.gif)
+![gear heaven gif](/media/gear_heaven.gif)

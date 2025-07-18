@@ -8,7 +8,10 @@ from typing import Any, List, Optional, Tuple, Union
 GEAR_DB = "gear_data.db"
 
 def init_db():
-    """Initialize database and create tables"""
+    """
+    Initialize the required database.
+    Run after installation.
+    """
     connection = None
     try:
         connection = sqlite3.connect(GEAR_DB)

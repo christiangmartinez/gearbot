@@ -25,7 +25,8 @@ def scrape_latest_gear(playwright: Playwright):
         gear_name = product.locator(PRODUCT_TITLE).inner_text()
         gear_price = product.locator(PRODUCT_PRICE).inner_text()
         gear_link = f'{SHOP_URL}{product.get_by_role("link").first.get_attribute("href")}'
-        gear_list.append({"name": gear_name, "price": gear_price, "link": gear_link})
+        item = {"name": gear_name, "price": gear_price, "link": gear_link}
+        gear_list.append(item)
     browser.close()
     return gear_list
 
