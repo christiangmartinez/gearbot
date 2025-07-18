@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from .data.fetch import fetch_gear_queries
+from data.fetch import fetch_gear_queries
 
 
 class GearQuery:
