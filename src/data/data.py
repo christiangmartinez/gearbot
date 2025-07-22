@@ -27,6 +27,16 @@ def init_db():
         """)
 
         cursor.execute("""
+            CREATE TRIGGER IF NOT EXISTS limit_gear_list_to_thirty_items
+            AFTER INSERT ON gear_list
+            WHEN (SELECT COUNT(*) FROM gear_list) > 30
+            BEGIN
+                DELETE FROM gear_list
+                WHERE id IN (SELECT id FROM GEAR_LIST ORDER BY id ASC LIMIT (SELECT COUNT(*) FROM gear_list) - 30);
+            END;
+        """)
+
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_queries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 search_term TEXT,
@@ -67,9 +77,7 @@ def execute_sql_query(
 
     execute_many: false uses execute for single value,
         true uses execute for a list of tuples.
-    is_select: True to fetch all results from a SELECT query
-
-
+    is_select: True to fetch all results from a SELECT query3
     """
     try:
         with sqlite3.connect(GEAR_DB) as connection:
