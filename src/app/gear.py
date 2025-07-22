@@ -1,7 +1,9 @@
 """GearQuery class and functions for interacting with queries."""
+import sqlite3
 from typing import Dict, List
 
-from data.fetch import fetch_open_gear_queries
+from data.fetch import (fetch_all_gear_queries, fetch_open_gear_queries,
+                        fetch_query)
 
 
 class GearQuery:
@@ -42,15 +44,45 @@ class GearQuery:
         """
         self.is_open = False
 
+def get_query(search_term: str):
+    """Returns an open query matching SEARCHTERM."""
+    response = fetch_query(search_term)
+    if not response:
+        return None
+    # fix this magic number, right now a list of rows is still returned
+    # even if there is only one result
+    query = convert_to_gear_query(response[0])
+    return query
+ 
 def get_open_queries():
     """Retrieve all open gear queries, returns a list of objects."""
-    open_queries = []
     response = fetch_open_gear_queries()
-    if response:
-        for item in response:
-            query = GearQuery(item["search_term"], item["timestamp"])
-            query.query_id = item["id"]
-            open_queries.append(query)
-    if not open_queries:
-        print("No open queries found")
-    return open_queries
+    if not response:
+        return None
+    return convert_queries(response)
+
+def get_all_queries():
+    """Returns all queries regardless of status"""
+    response = fetch_all_gear_queries()
+    if not response:
+        return None
+    return convert_queries(response)
+
+def convert_to_gear_query(sql_row: sqlite3.Row):
+    """
+    Takes a sqlite3 Row returned from from a fetch call.
+    Converts it to a GearQuery object so it can be interacted with.
+    """
+    query = GearQuery(sql_row["search_term"], sql_row["timestamp"])
+    return query
+
+def convert_queries(sql_response):
+    """Convert a list of Rows from the database to Gear Queries."""
+    queries = []
+    for item in sql_response:
+        query = convert_to_gear_query(item)
+        query.query_id = item["id"]
+        queries.append(query)
+    if not queries:
+        print("No queries found")
+    return queries

@@ -72,8 +72,9 @@ def execute_sql_query(
     sql_query: str,
     params: Union[Tuple[Any, ...], List[Tuple[Any, ...]]] = (),
     execute_many: bool = False,
-    is_select: bool = False,
-) -> Optional[List[sqlite3.Row]]:
+    is_select_one: bool = False,
+    is_select_all = False,
+) -> Optional[Union[sqlite3.Row, List[sqlite3.Row]]]:
     """
     Executes a SQL query and returns optional results
     params: values to be inserted into tables - single tuple or list of tuples.
@@ -90,7 +91,9 @@ def execute_sql_query(
                 cursor.executemany(sql_query, params)
             else:
                 cursor.execute(sql_query, params)
-            if is_select:
+            if is_select_one:
+                return cursor.fetchone()
+            if is_select_all:
                 return cursor.fetchall()
             return None
     except sqlite3.Error as e:
