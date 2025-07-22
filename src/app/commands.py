@@ -11,7 +11,7 @@ from data.fetch import fetch_gear_list
 from data.post import post_gear_list, post_gear_matches, post_gear_query
 from scrapers.gear_scraper import get_latest_gear
 
-from .gear import GearQuery, get_active_queries
+from .gear import GearQuery, get_open_queries
 
 
 def add_gear_query(search_term: Annotated[str, typer.Argument()]):
@@ -20,14 +20,18 @@ def add_gear_query(search_term: Annotated[str, typer.Argument()]):
     """
     timestamp = datetime.now().strftime("%Y-%m-%d")
     new_gear_query = GearQuery(search_term, timestamp)
-    post_gear_query(new_gear_query.search_term, new_gear_query.timestamp)
+    post_gear_query(
+        new_gear_query.search_term,
+        new_gear_query.timestamp,
+        new_gear_query.is_open
+    )
 
 def update_gear_matches():
     """
     Search for matches for all open queries. Update results.
     """
     gear_list = fetch_gear_list()
-    active_queries = get_active_queries()
+    active_queries = get_open_queries()
     for query in active_queries:
         print(query.search_term)
         matches = query.find_match(query.search_term, gear_list)

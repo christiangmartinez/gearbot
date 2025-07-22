@@ -1,5 +1,5 @@
 """
-CLI app
+CLI app.
 """
 
 import typer

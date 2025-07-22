@@ -21,9 +21,6 @@ pip install .
 # install playwright required browsers
 playwright install
 
-# install package application
-pipx install .
-
 ```
 
 ## Usage

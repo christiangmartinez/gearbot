@@ -1,14 +1,14 @@
 """
-Insert data to tables
+Insert data to tables.
 """
 
 from .data import execute_sql_query
 
 
-def post_gear_query(search_term: str, timestamp: str):
+def post_gear_query(search_term: str, timestamp: str, is_open: bool):
     """Post gear query to gear_queries table."""
-    query_values = (search_term, timestamp)
-    sql_query = "INSERT INTO gear_queries (search_term, timestamp) VALUES (?, ?)"
+    query_values = (search_term, timestamp, is_open)
+    sql_query = "INSERT INTO gear_queries (search_term, timestamp, is_open) VALUES (?, ?, ?)"
     execute_sql_query(sql_query, query_values)
 
 def post_gear_list(gear_list: list):

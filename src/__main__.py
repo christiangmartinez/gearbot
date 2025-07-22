@@ -1,5 +1,5 @@
 """
-Run CLI app
+Run CLI app.
 """
 
 import os

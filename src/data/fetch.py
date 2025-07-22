@@ -1,11 +1,15 @@
 """
-Fetch data from tables
+Fetch data from tables.
 """
 
 from .data import execute_sql_query
 
 
-def fetch_gear_queries():
+def fetch_open_gear_queries():
+    """Fetch all gear queries."""
+    return execute_sql_query("SELECT * FROM gear_queries WHERE is_open = 1", is_select=True)
+
+def fetch_all_gear_queries():
     """Fetch all gear queries."""
     return execute_sql_query("SELECT * FROM gear_queries", is_select=True)
 
