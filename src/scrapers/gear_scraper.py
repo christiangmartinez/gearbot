@@ -1,5 +1,5 @@
 """
-Scraper for Hank's Music Exchange
+Scraper for Hank's Music Exchange.
 """
 import re
 

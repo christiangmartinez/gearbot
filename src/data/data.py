@@ -1,5 +1,5 @@
 """
-Logic to initialize database and general SQL functions
+Logic to initialize database and general SQL functions.
 """
 
 import sqlite3
@@ -20,9 +20,9 @@ def init_db():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_list (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                price REAL,
-                link TEXT
+                name TEXT NOT NULL,
+                price REAL NOT NULL,
+                link TEXT NOT NULL
             )
         """)
 
@@ -32,26 +32,29 @@ def init_db():
             WHEN (SELECT COUNT(*) FROM gear_list) > 30
             BEGIN
                 DELETE FROM gear_list
-                WHERE id IN (SELECT id FROM GEAR_LIST ORDER BY id ASC LIMIT (SELECT COUNT(*) FROM gear_list) - 30);
+                WHERE id IN (SELECT id FROM GEAR_LIST ORDER BY id ASC
+                    LIMIT (SELECT COUNT(*) FROM gear_list) - 30);
             END;
         """)
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_queries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                search_term TEXT,
-                timestamp TEXT
+                search_term TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                is_open INTEGER NOT NULL
             )
         """)
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_matches (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                price REAL,
-                link TEXT,
-                query_id INTEGER,
-                FOREIGN KEY(query_id) REFERENCES gear_queries(id)
+                name TEXT NOT NULL,
+                price REAL NOT NULL,
+                link TEXT NOT NULL,
+                query_id INTEGER NOT NULL,
+                FOREIGN KEY(query_id)
+                    REFERENCES gear_queries(id)
             )
         """)
 
@@ -69,8 +72,9 @@ def execute_sql_query(
     sql_query: str,
     params: Union[Tuple[Any, ...], List[Tuple[Any, ...]]] = (),
     execute_many: bool = False,
-    is_select: bool = False,
-) -> Optional[List[sqlite3.Row]]:
+    is_select_one: bool = False,
+    is_select_all = False,
+) -> Optional[Union[sqlite3.Row, List[sqlite3.Row]]]:
     """
     Executes a SQL query and returns optional results
     params: values to be inserted into tables - single tuple or list of tuples.
@@ -87,7 +91,9 @@ def execute_sql_query(
                 cursor.executemany(sql_query, params)
             else:
                 cursor.execute(sql_query, params)
-            if is_select:
+            if is_select_one:
+                return cursor.fetchone()
+            if is_select_all:
                 return cursor.fetchall()
             return None
     except sqlite3.Error as e:
