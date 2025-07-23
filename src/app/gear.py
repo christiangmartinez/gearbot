@@ -47,24 +47,31 @@ class GearQuery:
 def get_query(search_term: str):
     """Returns an open query matching SEARCHTERM."""
     response = fetch_query(search_term)
-    if not response:
+    if response is None:
         return None
-    # fix this magic number, right now a list of rows is still returned
-    # even if there is only one result
-    query = convert_to_gear_query(response[0])
+    if not isinstance(response, sqlite3.Row):
+        print(f"Error: Unexpected return type {type(response)}")
+        return None
+    query = convert_to_gear_query(response)
     return query
- 
+
 def get_open_queries():
     """Retrieve all open gear queries, returns a list of objects."""
     response = fetch_open_gear_queries()
-    if not response:
+    if response is None:
+        return None
+    if not isinstance(response, list):
+        print(f"Error: Unexpected return type {type(response)}")
         return None
     return convert_queries(response)
 
 def get_all_queries():
     """Returns all queries regardless of status"""
     response = fetch_all_gear_queries()
-    if not response:
+    if response is None:
+        return None
+    if not isinstance(response, list):
+        print(f"Error: Unexpected return type {type(response)}")
         return None
     return convert_queries(response)
 
@@ -76,7 +83,7 @@ def convert_to_gear_query(sql_row: sqlite3.Row):
     query = GearQuery(sql_row["search_term"], sql_row["timestamp"])
     return query
 
-def convert_queries(sql_response):
+def convert_queries(sql_response: List[sqlite3.Row]):
     """Convert a list of Rows from the database to Gear Queries."""
     queries = []
     for item in sql_response:

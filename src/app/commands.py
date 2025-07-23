@@ -9,15 +9,14 @@ from typing_extensions import Annotated
 
 from data.fetch import fetch_gear_list
 from data.post import post_gear_list, post_gear_matches, post_gear_query
+from data.update import update_query_status
 from scrapers.gear_scraper import get_latest_gear
 
-from .gear import GearQuery, get_open_queries
+from .gear import GearQuery, get_open_queries, get_query
 
 
 def add_gear_query(search_term: Annotated[str, typer.Argument()]):
-    """
-    Search for a new item with SEARCHTERM.
-    """
+    """Search for a new item with SEARCHTERM."""
     timestamp = datetime.now().strftime("%Y-%m-%d")
     new_gear_query = GearQuery(search_term, timestamp)
     post_gear_query(
@@ -26,20 +25,24 @@ def add_gear_query(search_term: Annotated[str, typer.Argument()]):
         new_gear_query.is_open
     )
 
+def close_gear_query(search_term: Annotated[str, typer.Argument()]):
+    """Close a query for given SEARCHTERM."""
+    query = get_query(search_term)
+    if query:
+        query.close_query()
+        update_query_status(query.search_term, query.is_open)
+
 def update_gear_matches():
-    """
-    Search for matches for all open queries. Update results.
-    """
+    """Search for matches for all open queries. Update results."""
     gear_list = fetch_gear_list()
     active_queries = get_open_queries()
-    for query in active_queries:
-        print(query.search_term)
-        matches = query.find_match(query.search_term, gear_list)
-        post_gear_matches(matches)
+    if active_queries:
+        for query in active_queries:
+            print(query.search_term)
+            matches = query.find_match(query.search_term, gear_list)
+            post_gear_matches(matches)
 
 def update_gear_list():
-    """
-    Run web scraper to update gear list.
-    """
+    """Run web scraper to update gear list."""
     gear_list = get_latest_gear()
     post_gear_list(gear_list)
