@@ -49,9 +49,6 @@ def get_query(search_term: str):
     response = fetch_query(search_term)
     if response is None:
         return None
-    if not isinstance(response, sqlite3.Row):
-        print(f"Error: Unexpected return type {type(response)}")
-        return None
     query = convert_to_gear_query(response)
     return query
 
@@ -60,18 +57,12 @@ def get_open_queries():
     response = fetch_open_gear_queries()
     if response is None:
         return None
-    if not isinstance(response, list):
-        print(f"Error: Unexpected return type {type(response)}")
-        return None
     return convert_queries(response)
 
 def get_all_queries():
     """Returns all queries regardless of status"""
     response = fetch_all_gear_queries()
     if response is None:
-        return None
-    if not isinstance(response, list):
-        print(f"Error: Unexpected return type {type(response)}")
         return None
     return convert_queries(response)
 

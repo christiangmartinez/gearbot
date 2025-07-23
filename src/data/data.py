@@ -99,3 +99,33 @@ def execute_sql_query(
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return None
+
+def sql_fetch_one(
+    sql_query: str,
+    params: Union[str, Tuple[Any, ...]] = (),
+) -> Optional[sqlite3.Row]:
+    """Execute a SQL query that returns a single value"""
+    try:
+        with sqlite3.connect(GEAR_DB) as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+            cursor.execute(sql_query, params)
+            return cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return None
+
+def sql_fetch_all(
+    sql_query: str,
+    params: Union[str, Tuple[Any, ...]] = (),
+) -> Optional[List[sqlite3.Row]]:
+    """Execute a SQL query that returns a list of values"""
+    try:
+        with sqlite3.connect(GEAR_DB) as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+            cursor.execute(sql_query, params)
+            return cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return None
