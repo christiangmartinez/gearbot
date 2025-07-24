@@ -4,14 +4,13 @@ Fetch data from tables.
 import sqlite3
 from typing import List, Optional
 
-from .data import sql_fetch_all, sql_fetch_one
+from .sql_funcs import sql_fetch_all, sql_fetch_one
 
 
 def fetch_query(search_term: str) -> Optional[sqlite3.Row]:
     """Fetch a specific query matching SEARCHTERM."""
     sql_query = "SELECT * FROM gear_queries WHERE search_term = ?"
-    query_row = sql_fetch_one(sql_query,search_term)
-    return query_row
+    return sql_fetch_one(sql_query,(search_term,))
 
 def fetch_open_gear_queries() -> Optional[List[sqlite3.Row]]:
     """Fetch all gear queries."""
