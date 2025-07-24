@@ -7,6 +7,7 @@ from datetime import datetime
 import typer
 from typing_extensions import Annotated
 
+from data.delete import delete_query, delete_query_matches
 from data.fetch import fetch_gear_list
 from data.post import post_gear_list, post_gear_matches, post_gear_query
 from data.update import update_query_status
@@ -46,3 +47,14 @@ def update_gear_list():
     """Run web scraper to update gear list."""
     gear_list = get_latest_gear()
     post_gear_list(gear_list)
+
+def delete_gear_query(search_term: Annotated[str, typer.Argument()]):
+    """Delete a query with SEARCHTERM and any associated matches."""
+    typer.confirm(f"Delete query for {search_term} + history/matches?", abort=True)
+    query = get_query(search_term)
+    if query:
+        if query.matches:
+            delete_query_matches(query.query_id)
+        delete_query(query.search_term)
+        print(f"Deleted query for {query.search_term}")
+

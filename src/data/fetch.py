@@ -1,36 +1,26 @@
 """
 Fetch data from tables.
 """
+import sqlite3
+from typing import List, Optional
 
-from .data import execute_sql_query
+from .sql_funcs import sql_fetch_all, sql_fetch_one
 
 
-def fetch_query(search_term: str):
+def fetch_query(search_term: str) -> Optional[sqlite3.Row]:
     """Fetch a specific query matching SEARCHTERM."""
     sql_query = "SELECT * FROM gear_queries WHERE search_term = ?"
-    return execute_sql_query(
-        sql_query,
-        params=(search_term,),
-        is_select_one=True
-    )
+    return sql_fetch_one(sql_query,(search_term,))
 
-def fetch_open_gear_queries():
+def fetch_open_gear_queries() -> Optional[List[sqlite3.Row]]:
     """Fetch all gear queries."""
-    return execute_sql_query(
-        "SELECT * FROM gear_queries WHERE is_open = 1",
-        is_select_all=True
-    )
+    return sql_fetch_all("SELECT * FROM gear_queries WHERE is_open = 1")
 
 def fetch_all_gear_queries():
     """Fetch all gear queries."""
-    return execute_sql_query(
-        "SELECT * FROM gear_queries",
-        is_select_all=True
-    )
+    return sql_fetch_all("SELECT * FROM gear_queries")
 
 def fetch_gear_list():
     """Fetch all items in gear list table."""
-    return execute_sql_query(
-        "SELECT * FROM gear_list",
-        is_select_all=True
-    )
+    return sql_fetch_all("SELECT * FROM gear_list")
+

@@ -68,34 +68,36 @@ def init_db():
         if connection:
             connection.close()
 
-def execute_sql_query(
-    sql_query: str,
-    params: Union[Tuple[Any, ...], List[Tuple[Any, ...]]] = (),
-    execute_many: bool = False,
-    is_select_one: bool = False,
-    is_select_all = False,
-) -> Optional[Union[sqlite3.Row, List[sqlite3.Row]]]:
+def sql_execute(sql_query: str, params: Tuple[Any,...]):
     """
-    Executes a SQL query and returns optional results
-    params: values to be inserted into tables - single tuple or list of tuples.
+    Perform a SQL with execute where a return value is not required.
+    """
+    with sqlite3.connect(GEAR_DB) as connection:
+        cursor = connection.cursor()
+        cursor.execute(sql_query, params)
 
-    execute_many: false uses execute for single value,
-        true uses execute for a list of tuples.
-    is_select: True to fetch all results from a SELECT query3
+def sql_execute_many(sql_query: str, params: List[Tuple[Any, ...]]):
     """
-    try:
-        with sqlite3.connect(GEAR_DB) as connection:
-            connection.row_factory = sqlite3.Row
-            cursor = connection.cursor()
-            if execute_many:
-                cursor.executemany(sql_query, params)
-            else:
-                cursor.execute(sql_query, params)
-            if is_select_one:
-                return cursor.fetchone()
-            if is_select_all:
-                return cursor.fetchall()
-            return None
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return None
+    Perform a SQL with executemany where a return value is not required.
+    """
+    with sqlite3.connect(GEAR_DB) as connection:
+        cursor = connection.cursor()
+        cursor.executemany(sql_query, params)
+
+def sql_fetch_one(sql_query: str, params: Tuple[Any, ...]) -> Optional[sqlite3.Row]:
+    """Execute a SQL query that returns a single value."""
+    with sqlite3.connect(GEAR_DB) as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute(sql_query, params)
+        response = cursor.fetchone()
+        return response if response else None
+
+def sql_fetch_all(sql_query: str) -> Optional[List[sqlite3.Row]]:
+    """Execute a SQL query that returns a list of values."""
+    with sqlite3.connect(GEAR_DB) as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute(sql_query)
+        response = cursor.fetchall()
+        return response if response else None

@@ -2,14 +2,14 @@
 Insert data to tables.
 """
 
-from .data import execute_sql_query
+from .sql_funcs import sql_execute, sql_execute_many
 
 
 def post_gear_query(search_term: str, timestamp: str, is_open: bool):
     """Post gear query to gear_queries table."""
     query_values = (search_term, timestamp, is_open)
     sql_query = "INSERT INTO gear_queries (search_term, timestamp, is_open) VALUES (?, ?, ?)"
-    execute_sql_query(sql_query, query_values)
+    sql_execute(sql_query, query_values)
 
 def post_gear_list(gear_list: list):
     """"
@@ -23,7 +23,7 @@ def post_gear_list(gear_list: list):
         for gear in gear_list
     ]
     sql_query = "INSERT INTO gear_list(name, price, link) VALUES (?, ?, ?)"
-    execute_sql_query(sql_query, gear_tuples, execute_many=True)
+    sql_execute_many(sql_query, gear_tuples)
 
 
 def post_gear_matches(gear_matches: list):
@@ -33,4 +33,4 @@ def post_gear_matches(gear_matches: list):
         for match in gear_matches
     ]
     sql_query = "INSERT INTO gear_matches (name, price, link, query_id) VALUES (?, ?, ?, ?)"
-    execute_sql_query(sql_query, match_tuples, execute_many=True)
+    sql_execute_many(sql_query, match_tuples)
