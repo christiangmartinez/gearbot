@@ -8,7 +8,7 @@ import typer
 from typing_extensions import Annotated
 
 from data.delete import delete_query, delete_query_matches
-from data.fetch import fetch_gear_list
+from data.fetch import fetch_gear_list, open_query_exists
 from data.post import post_gear_list, post_gear_matches, post_gear_query
 from data.update import update_query_status
 from scrapers.gear_scraper import get_latest_gear
@@ -18,13 +18,16 @@ from .gear import GearQuery, get_open_queries, get_query
 
 def add_gear_query(search_term: Annotated[str, typer.Argument()]):
     """Search for a new item with SEARCHTERM."""
-    timestamp = datetime.now().strftime("%Y-%m-%d")
-    new_gear_query = GearQuery(search_term, timestamp)
-    post_gear_query(
-        new_gear_query.search_term,
-        new_gear_query.timestamp,
-        new_gear_query.is_open
-    )
+    if open_query_exists(search_term):
+        print(f"Open query already exists for {search_term}")
+    else:
+        timestamp = datetime.now().strftime("%Y-%m-%d")
+        new_gear_query = GearQuery(search_term, timestamp)
+        post_gear_query(
+            new_gear_query.search_term,
+            new_gear_query.timestamp,
+            new_gear_query.is_open
+        )
 
 def close_gear_query(search_term: Annotated[str, typer.Argument()]):
     """Close a query for given SEARCHTERM."""
