@@ -7,9 +7,8 @@ from .sql_funcs import sql_execute
 
 def delete_query_matches(query_id: int):
     """Delete matches for a given query from gear_matches table."""
-    id_tuple = (str(query_id),)
     sql_query = """DELETE FROM gear_matches WHERE query_id = ?"""
-    sql_execute(sql_query, id_tuple)
+    sql_execute(sql_query, (query_id,))
 
 def delete_query(search_term: str):
     """Delete a query with SEARCHTERM."""

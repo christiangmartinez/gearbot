@@ -8,17 +8,17 @@ import typer
 from typing_extensions import Annotated
 
 from data.delete import delete_query, delete_query_matches
-from data.fetch import fetch_gear_list
+from data.fetch import fetch_gear_list, open_query_exists
 from data.post import post_gear_list, post_gear_matches, post_gear_query
 from data.update import update_query_status
 from scrapers.gear_scraper import get_latest_gear
 
-from .gear import GearQuery, get_open_queries, get_query, query_exists
+from .gear import GearQuery, get_open_queries, get_query
 
 
 def add_gear_query(search_term: Annotated[str, typer.Argument()]):
     """Search for a new item with SEARCHTERM."""
-    if query_exists(search_term):
+    if open_query_exists(search_term):
         print(f"Open query already exists for {search_term}")
     else:
         timestamp = datetime.now().strftime("%Y-%m-%d")

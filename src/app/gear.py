@@ -1,9 +1,9 @@
 """GearQuery class and functions for interacting with queries."""
 import sqlite3
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from data.fetch import (fetch_all_gear_queries, fetch_open_gear_queries,
-                        fetch_open_query_search_terms, fetch_query)
+                        fetch_query)
 
 
 class GearQuery:
@@ -84,12 +84,3 @@ def convert_queries(sql_response: List[sqlite3.Row]):
     if not queries:
         print("No queries found")
     return queries
-
-def query_exists(search_term: str) -> bool:
-    """Check if a query already exists for SEARCHTERM."""
-    existing_queries = fetch_open_query_search_terms()
-    if existing_queries:
-        for query in existing_queries:
-            if search_term in query:
-                return True
-    return False

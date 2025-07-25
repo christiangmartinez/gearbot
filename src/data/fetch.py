@@ -16,10 +16,6 @@ def fetch_open_gear_queries() -> Optional[List[sqlite3.Row]]:
     """Fetch all gear queries."""
     return sql_fetch_all("SELECT * FROM gear_queries WHERE is_open = 1")
 
-def fetch_open_query_search_terms() -> Optional[List[sqlite3.Row]]:
-    """Fetch SEARCHTERM for all open queries"""
-    return sql_fetch_all("SELECT search_term FROM gear_queries WHERE is_open = 1")
-
 def fetch_all_gear_queries():
     """Fetch all gear queries."""
     return sql_fetch_all("SELECT * FROM gear_queries")
@@ -28,3 +24,8 @@ def fetch_gear_list():
     """Fetch all items in gear list table."""
     return sql_fetch_all("SELECT * FROM gear_list")
 
+def open_query_exists(search_term: str) -> bool:
+    """Check if a query already exists for SEARCHTERM."""
+    sql_query = "SELECT 1 FROM gear_queries WHERE search_term = ? AND is_open = 1 LIMIT 1"
+    result = sql_fetch_one(sql_query, (search_term,))
+    return result is not None
