@@ -16,6 +16,10 @@ def fetch_open_gear_queries() -> Optional[List[sqlite3.Row]]:
     """Fetch all gear queries."""
     return sql_fetch_all("SELECT * FROM gear_queries WHERE is_open = 1")
 
+def fetch_open_query_search_terms() -> Optional[List[sqlite3.Row]]:
+    """Fetch SEARCHTERM for all open queries"""
+    return sql_fetch_all("SELECT search_term FROM gear_queries WHERE is_open = 1")
+
 def fetch_all_gear_queries():
     """Fetch all gear queries."""
     return sql_fetch_all("SELECT * FROM gear_queries")
