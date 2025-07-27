@@ -5,15 +5,17 @@ Logic for CLI commands.
 from datetime import datetime
 
 import typer
+from rich.console import Console
 from typing_extensions import Annotated
 
 from data.delete import delete_query, delete_query_matches
 from data.fetch import fetch_gear_list, open_query_exists
 from data.post import post_gear_list, post_gear_matches, post_gear_query
 from data.update import update_query_status
-from scrapers.gear_scraper import get_latest_gear
+from scripts.gear_scraper import get_latest_gear
 
 from .gear import GearQuery, get_open_queries, get_query
+from .report import generate_queries_table
 
 
 def add_gear_query(search_term: Annotated[str, typer.Argument()]):
@@ -21,7 +23,8 @@ def add_gear_query(search_term: Annotated[str, typer.Argument()]):
     if open_query_exists(search_term):
         print(f"Open query already exists for {search_term}")
     else:
-        timestamp = datetime.now().strftime("%Y-%m-%d")
+        now = datetime.now()
+        timestamp = now.isoformat(timespec="seconds")
         new_gear_query = GearQuery(search_term, timestamp)
         post_gear_query(
             new_gear_query.search_term,
@@ -61,3 +64,12 @@ def delete_gear_query(search_term: Annotated[str, typer.Argument()]):
         delete_query(query.search_term)
         print(f"Deleted query for {query.search_term}")
 
+def print_report():
+    """Print a report with query status"""
+    queries = get_open_queries()
+    if not queries:
+        print("No queries currently running")
+    else:
+        console = Console()
+        table = generate_queries_table(queries)
+        console.print(table)
