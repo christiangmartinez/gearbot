@@ -5,8 +5,10 @@ from datetime import datetime, timedelta
 
 from rich.table import Table
 
+from .gear import GearQuery
 
-def generate_queries_table(queries: list, all_queries: bool=False) -> Table:
+
+def generate_queries_table(queries: list[GearQuery], all_queries: bool=False) -> Table:
     """Generate table for open queries"""
     table = Table(show_lines=True)
     table.add_column("Search term")
@@ -22,8 +24,10 @@ def generate_queries_table(queries: list, all_queries: bool=False) -> Table:
         uptime_message = format_time_message(uptime)
         row_values = [query.search_term, uptime_message]
         if all_queries:
-            if not query.matches:
+            if query.is_open:
                 matches = "None - query open"
+            elif not query.matches:
+                matches = "No matches found"
             else:
                 matches = "\n".join(query.matches)
             row_values.append(matches)
