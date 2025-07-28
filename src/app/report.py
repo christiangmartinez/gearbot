@@ -6,17 +6,28 @@ from datetime import datetime, timedelta
 from rich.table import Table
 
 
-def generate_queries_table(queries: list) -> Table:
-    """Generate table for Live Display."""
+def generate_queries_table(queries: list, all_queries: bool=False) -> Table:
+    """Generate table for open queries"""
     table = Table(show_lines=True)
     table.add_column("Search term")
     table.add_column("Query uptime")
+    if all_queries:
+        table.add_column("Matches")
+
     now = datetime.now()
+
     for query in queries:
         start_time = datetime.fromisoformat(query.timestamp)
         uptime: timedelta = now - start_time
         uptime_message = format_time_message(uptime)
-        table.add_row(query.search_term, uptime_message)
+        row_values = [query.search_term, uptime_message]
+        if all_queries:
+            if not query.matches:
+                matches = "None - query open"
+            else:
+                matches = "\n".join(query.matches)
+            row_values.append(matches)
+        table.add_row(*row_values)
     return table
 
 def format_time_message(td: timedelta) -> str:

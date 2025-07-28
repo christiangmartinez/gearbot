@@ -14,7 +14,7 @@ from data.post import post_gear_list, post_gear_matches, post_gear_query
 from data.update import update_query_status
 from scripts.gear_scraper import get_latest_gear
 
-from .gear import GearQuery, get_open_queries, get_query
+from .gear import GearQuery, get_all_queries, get_open_queries, get_query
 from .report import generate_queries_table
 
 
@@ -36,8 +36,7 @@ def close_gear_query(search_term: Annotated[str, typer.Argument()]):
     """Close a query for given SEARCHTERM."""
     query = get_query(search_term)
     if query:
-        query.close_query()
-        update_query_status(query.search_term, query.is_open)
+        close_query_and_update_status(query)
 
 def update_gear_matches():
     """Search for matches for all open queries. Update results."""
@@ -45,9 +44,10 @@ def update_gear_matches():
     active_queries = get_open_queries()
     if active_queries:
         for query in active_queries:
-            print(query.search_term)
             matches = query.find_match(query.search_term, gear_list)
-            post_gear_matches(matches)
+            if matches:
+                post_gear_matches(matches)
+                close_query_and_update_status(query)
 
 def update_gear_list():
     """Run web scraper to update gear list."""
@@ -64,12 +64,20 @@ def delete_gear_query(search_term: Annotated[str, typer.Argument()]):
         delete_query(query.search_term)
         print(f"Deleted query for {query.search_term}")
 
-def print_report():
+def print_report(all_queries: Annotated[bool, typer.Option("--all")]=False):
     """Print a report with query status"""
-    queries = get_open_queries()
+    if all_queries:
+        queries = get_all_queries()
+    else:
+        queries = get_open_queries()
     if not queries:
         print("No queries currently running")
     else:
         console = Console()
-        table = generate_queries_table(queries)
+        table = generate_queries_table(queries, all_queries)
         console.print(table)
+
+def close_query_and_update_status(query: GearQuery):
+    """Closes a query and updates the database."""
+    query.close_query()
+    update_query_status(query.search_term, query.is_open)
