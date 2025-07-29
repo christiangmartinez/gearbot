@@ -1,19 +1,19 @@
 """GearQuery class and functions for interacting with queries."""
 import sqlite3
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-from data.fetch import (fetch_all_gear_queries, fetch_open_gear_queries,
-                        fetch_query)
+from data.fetch import (fetch_all_gear_queries, fetch_gear_matches,
+                        fetch_open_gear_queries, fetch_query)
 
 
 class GearQuery:
     """Gear queries are added by user. Everything interacts with these queries."""
-    def __init__(self, search_term: str, timestamp: str):
+    def __init__(self, search_term: str, timestamp: str, is_open=True):
         self.query_id = 0
         self.search_term = search_term
         self.timestamp = timestamp
         self.matches = []
-        self.is_open = True
+        self.is_open = is_open
 
 
     def find_match(self, search_term: str, gear_list: list) -> List[Dict]:
@@ -44,42 +44,58 @@ class GearQuery:
         """
         self.is_open = False
 
-def get_query(search_term: str):
+def get_query(search_term: str) -> Optional[GearQuery]:
     """Returns an open query matching SEARCHTERM."""
-    response = fetch_query(search_term)
-    if response is None:
+    query = fetch_query(search_term)
+    if query is None:
         return None
-    query = convert_to_gear_query(response)
-    return query
+    return convert_to_gear_query(query)
 
-def get_open_queries():
-    """Retrieve all open gear queries, returns a list of objects."""
-    response = fetch_open_gear_queries()
-    if response is None:
+def get_open_queries() -> Optional[list[GearQuery]]:
+    """Retrieves all open gear queries, returns a list of objects."""
+    queries = fetch_open_gear_queries()
+    if queries is None:
         return None
-    return convert_queries(response)
+    return convert_queries(queries)
 
-def get_all_queries():
-    """Returns all queries regardless of status"""
-    response = fetch_all_gear_queries()
-    if response is None:
+def get_all_queries() -> Optional[list[GearQuery]]:
+    """Returns all queries and any matches"""
+    queries_row = fetch_all_gear_queries()
+    if queries_row is None:
         return None
-    return convert_queries(response)
+    queries = convert_queries(queries_row)
+    add_matches(queries)
+    return queries
 
-def convert_to_gear_query(sql_row: sqlite3.Row):
+def add_matches(queries: list[GearQuery]) -> Optional[list[GearQuery]]:
+    """Fetches all matches and adds them to associated queries."""
+    matches = fetch_gear_matches()
+    if matches is None:
+        return None
+    query_map = {}
+    for query in queries:
+        query_map[query.query_id] = query
+    for match in matches:
+        # id is the first value, not needed here
+        _, name, price, link, query_id = match
+        if query_id in query_map:
+            query_map[query_id].matches.append(f"{name} {price} \n{link}\n")
+    return queries
+
+def convert_to_gear_query(query_row: sqlite3.Row) -> GearQuery:
     """
     Takes a sqlite3 Row returned from from a fetch call.
     Converts it to a GearQuery object so it can be interacted with.
     """
-    query = GearQuery(sql_row["search_term"], sql_row["timestamp"])
+    query = GearQuery(query_row["search_term"], query_row["timestamp"], query_row["is_open"])
     return query
 
-def convert_queries(sql_response: List[sqlite3.Row]):
-    """Convert a list of Rows from the database to Gear Queries."""
+def convert_queries(query_row_list: List[sqlite3.Row]) -> list[GearQuery]:
+    """Converts a list of Rows from the database to Gear Queries."""
     queries = []
-    for item in sql_response:
-        query = convert_to_gear_query(item)
-        query.query_id = item["id"]
+    for query_row in query_row_list:
+        query = convert_to_gear_query(query_row)
+        query.query_id = query_row["id"]
         queries.append(query)
     if not queries:
         print("No queries found")
