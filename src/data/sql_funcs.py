@@ -3,7 +3,7 @@ Logic to initialize database and general SQL functions.
 """
 
 import sqlite3
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Tuple
 
 GEAR_DB = "gear_data.db"
 
@@ -40,9 +40,9 @@ def init_db():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS gear_queries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                is_open INTEGER NOT NULL,
                 search_term TEXT NOT NULL,
-                timestamp TEXT NOT NULL,
-                is_open INTEGER NOT NULL
+                timestamp TEXT NOT NULL
             )
         """)
 
@@ -59,7 +59,7 @@ def init_db():
         """)
 
         connection.commit()
-        print("Sucessfully created database.")
+        print("Successfully created database.")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")

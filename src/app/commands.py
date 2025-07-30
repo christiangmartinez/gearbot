@@ -27,9 +27,9 @@ def add_gear_query(search_term: Annotated[str, typer.Argument()]):
         timestamp = now.isoformat(timespec="seconds")
         new_gear_query = GearQuery(search_term, timestamp)
         post_gear_query(
+            new_gear_query.is_open,
             new_gear_query.search_term,
-            new_gear_query.timestamp,
-            new_gear_query.is_open
+            new_gear_query.timestamp
         )
 
 def close_gear_query(search_term: Annotated[str, typer.Argument()]):
@@ -42,7 +42,7 @@ def update_gear_matches():
     """Search for matches for all open queries. Update results."""
     gear_list = fetch_gear_list()
     active_queries = get_open_queries()
-    if active_queries:
+    if active_queries and gear_list:
         for query in active_queries:
             matches = query.find_match(query.search_term, gear_list)
             if matches:

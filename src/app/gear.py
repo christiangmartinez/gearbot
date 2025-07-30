@@ -8,12 +8,12 @@ from data.fetch import (fetch_all_gear_queries, fetch_gear_matches,
 
 class GearQuery:
     """Gear queries are added by user. Everything interacts with these queries."""
-    def __init__(self, search_term: str, timestamp: str, is_open=True):
-        self.query_id = 0
+    def __init__(self, search_term: str, timestamp: str, query_id: int=0, is_open: bool=True):
+        self.query_id = query_id
+        self.is_open = is_open
         self.search_term = search_term
         self.timestamp = timestamp
         self.matches = []
-        self.is_open = is_open
 
 
     def find_match(self, search_term: str, gear_list: list) -> List[Dict]:
@@ -76,10 +76,9 @@ def add_matches(queries: list[GearQuery]) -> Optional[list[GearQuery]]:
     for query in queries:
         query_map[query.query_id] = query
     for match in matches:
-        # id is the first value, not needed here
-        _, name, price, link, query_id = match
+        name, price, link, query_id = match
         if query_id in query_map:
-            query_map[query_id].matches.append(f"{name} {price} \n{link}\n")
+            query_map[query_id].matches.append(f"{name} {price}\n{link}\n")
     return queries
 
 def convert_to_gear_query(query_row: sqlite3.Row) -> GearQuery:
@@ -87,7 +86,11 @@ def convert_to_gear_query(query_row: sqlite3.Row) -> GearQuery:
     Takes a sqlite3 Row returned from from a fetch call.
     Converts it to a GearQuery object so it can be interacted with.
     """
-    query = GearQuery(query_row["search_term"], query_row["timestamp"], query_row["is_open"])
+    query = GearQuery(
+        query_row["search_term"],
+        query_row["timestamp"],
+        query_row["id"],
+        query_row["is_open"])
     return query
 
 def convert_queries(query_row_list: List[sqlite3.Row]) -> list[GearQuery]:
@@ -95,7 +98,6 @@ def convert_queries(query_row_list: List[sqlite3.Row]) -> list[GearQuery]:
     queries = []
     for query_row in query_row_list:
         query = convert_to_gear_query(query_row)
-        query.query_id = query_row["id"]
         queries.append(query)
     if not queries:
         print("No queries found")

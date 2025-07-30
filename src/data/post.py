@@ -5,10 +5,10 @@ Insert data to tables.
 from .sql_funcs import sql_execute, sql_execute_many
 
 
-def post_gear_query(search_term: str, timestamp: str, is_open: bool):
+def post_gear_query(is_open: bool, search_term: str, timestamp: str):
     """Post gear query to gear_queries table."""
-    query_values = (search_term, timestamp, is_open)
-    sql_query = "INSERT INTO gear_queries (search_term, timestamp, is_open) VALUES (?, ?, ?)"
+    query_values = (is_open, search_term, timestamp)
+    sql_query = "INSERT INTO gear_queries (is_open, search_term, timestamp) VALUES (?, ?, ?)"
     sql_execute(sql_query, query_values)
 
 def post_gear_list(gear_list: list):
