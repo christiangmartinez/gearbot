@@ -5,6 +5,7 @@ dependencies = [
     "playwright",
     "pylint",
     "typer",
+    "discord.py"
 ]
 requires-python = ">=3.8"
 authors = [{name = "Christian Martinez"}]

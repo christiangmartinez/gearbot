@@ -6,3 +6,5 @@ build/
 
 *.db
 *.DS_Store
+
+.env
