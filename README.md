@@ -32,4 +32,4 @@ playwright install
 - Add search functionality for just Reverb (probably more useful to most people)
 
 ## Let gearbot take you to gear heaven!
-![gear heaven gif](/media/gear_heaven.gif)
+![gearbot holding a bass guitar](/media/gearbot_bass.png)
