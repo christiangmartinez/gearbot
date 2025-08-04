@@ -1,5 +1,4 @@
-# gearbot
-
+![gearbot logo banner](media/Gearbot-TEST-fullLogo.png)
 gearbot is a CLI application that checks a local music store, Hank's Music Exchange to see if a piece of music gear you want is available.
 Born out of my ever-growing frustration with using social media. Now you won't have to waste time logging on to instagram daily to check for updates.
 You'll just get notified as soon as the gear you want is avaiable!
